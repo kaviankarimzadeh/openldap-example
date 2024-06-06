@@ -106,7 +106,7 @@ ldapadd -x -D cn=admin,dc=example,dc=local -W -f users.ldif
 
 #### Verifying all created objects.
 
-Now you can run below command again to verify all the objects we just created:
+Now you can run below commands to verify all the objects we just created:
 
 ```
 ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:///
