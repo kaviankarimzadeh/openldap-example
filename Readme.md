@@ -58,11 +58,12 @@ Now it's time to reconfigure LDAP config file to use the new information we just
 {
     vi /etc/ldap/ldap.conf
 }
-
-#Uncomment and provide the correct info:
-BASE    dc=example,dc=local
-URI     ldap://ldap-server.example.local
 ```
+#Uncomment and provide the correct info:
+
+`BASE    dc=example,dc=local`
+
+`URI     ldap://ldap-server.example.local`
 
 ```
 {
@@ -109,13 +110,11 @@ Now you can run below command again to verify all the objects we just created:
 
 ```
 ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:///
+```
+```
 ldapsearch -D "cn=admin,dc=example,dc=local" -W -b "OU=users,DC=example,DC=local"
 ```
 
 ```
 ldapsearch -x -LLL -b dc=example,dc=local '(uid=Charlotte)' cn uidNumber gidNumber
-dn: uid=Charlotte,ou=users,dc=example,dc=local
-cn: Charlotte White
-uidNumber: 7312
-gidNumber: 5700
 ```
