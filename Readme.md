@@ -5,9 +5,6 @@ Here is the guidline to create a LDAP server for testing purpose:
 If you're using Public Cloud providers, might be better idea to use Private IP address:
 
 ```
-PRIVATE_IP=<replace-with-your-internal-ip-address>
-LDAP_FQDN=<replace-with-your-desired-LDAP-address>
-
 #for example:
 {
     PRIVATE_IP=10.0.1.6
