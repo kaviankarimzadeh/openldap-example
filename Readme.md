@@ -98,7 +98,13 @@ ldapadd -x -D cn=admin,dc=example,dc=local -W -f groups.ldif
 
 #### Creating some random users:
 
-Run below command to add users to the LDAP:
+First we need to generate a password for users, so you can run this command to generate a new one and replace the while encrypted result with password `userPassword` in users.ldif file.
+
+```
+slappasswd
+```
+
+Next, run below command to add users to the LDAP:
 
 ```
 ldapadd -x -D cn=admin,dc=example,dc=local -W -f users.ldif
