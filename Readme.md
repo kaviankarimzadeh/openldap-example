@@ -110,6 +110,14 @@ Next, run below command to add users to the LDAP:
 ldapadd -x -D cn=admin,dc=example,dc=local -W -f users.ldif
 ```
 
+#### Adding users into Group as memberuid (optional)
+
+Here we add memberUid as an attribute to our groups.
+
+```
+ldapadd -x -D cn=admin,dc=example,dc=local -W -f modify-group.ldif
+```
+
 #### Verifying all created objects.
 
 Now you can run below commands to verify all the objects we just created:
