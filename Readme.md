@@ -80,6 +80,84 @@ You can check and verfy the LDAP configuration by this command:
 }
 ```
 
+#### Activate `memberOf'
+
+First we need to check current module list to check then next index we should create a new entry with the next available index for memberOf module:
+
+```
+ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b cn=config '(objectClass=olcModuleList)' dn
+
+# or 
+
+ls  /etc/ldap/slapd.d/cn\=config/
+```
+
+In our example the next available index is 1:
+```
+cat > load-memberof.ldif
+dn: cn=module{1},cn=config
+objectClass: olcModuleList
+cn: module{1}
+olcModulePath: /usr/lib/ldap
+olcModuleLoad: memberof.la
+
+ldapadd -Q -Y EXTERNAL -H ldapi:/// -f load-memberof.ldif
+adding new entry "cn=module{1},cn=config"
+```
+
+#Verify module list:
+```
+ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b cn=config '(objectClass=olcModuleList)' dn
+dn: cn=module{0},cn=config
+
+dn: cn=module{1},cn=config
+```
+
+#To determine which database configuration you need to apply the memberOf overlay to, you can perform an LDAP search to list the database entries in your configuration:
+
+```
+ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b cn=config '(objectClass=olcDatabaseConfig)' dn
+dn: olcDatabase={-1}frontend,cn=config
+
+dn: olcDatabase={0}config,cn=config
+
+dn: olcDatabase={1}mdb,cn=config
+```
+
+#Configure the memberOf overlay
+```
+cat > memberof-overlay.ldif 
+dn: olcOverlay=memberof,olcDatabase={1}mdb,cn=config
+objectClass: olcOverlayConfig
+objectClass: olcMemberOf
+olcOverlay: memberof
+olcMemberOfDangling: ignore
+olcMemberOfRefInt: TRUE
+
+ldapadd -Q -Y EXTERNAL -H ldapi:/// -f memberof-overlay.ldif
+adding new entry "olcOverlay=memberof,olcDatabase={1}mdb,cn=config"
+```
+
+#restart the slapd
+
+```
+systemctl restart slapd
+```
+
+#Verify memberOf module:
+
+```
+ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:/// -b cn=config olcOverlay=memberof
+dn: olcOverlay={0}memberof,olcDatabase={1}mdb,cn=config
+objectClass: olcOverlayConfig
+objectClass: olcMemberOfConfig
+olcOverlay: {0}memberof
+olcMemberOfDangling: ignore
+olcMemberOfRefInt: TRUE
+```
+
+
+
 #### Creating two main OUs for storing other groups and users:
 
 Run below command to add OUs to the LDAP:
@@ -110,17 +188,17 @@ Next, run below command to add users to the LDAP:
 ldapadd -x -D cn=admin,dc=example,dc=local -W -f users.ldif
 ```
 
-#### Adding users into Group as memberuid (optional)
-
-Here we add memberUid as an attribute to our groups.
-
-```
-ldapadd -x -D cn=admin,dc=example,dc=local -W -f modify-group.ldif
-```
-
 #### Verifying all created objects.
 
 Now you can run below commands to verify all the objects we just created:
+
+```
+ldapsearch -x -LLL -b "uid=Liam,ou=users,dc=example,dc=local" memberOf
+dn: uid=Liam,ou=users,dc=example,dc=local
+
+ldapsearch -x -LLL -b "uid=Olivia,ou=users,dc=example,dc=local" memberOf
+dn: uid=Olivia,ou=users,dc=example,dc=local
+```
 
 ```
 ldapsearch -Q -LLL -Y EXTERNAL -H ldapi:///
