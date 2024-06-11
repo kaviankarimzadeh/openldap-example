@@ -1,29 +1,9 @@
 dn: cn=amsterdam,ou=groups,dc=example,dc=local
-objectClass: posixGroup
+objectClass: groupOfNames
 cn: amsterdam
-gidNumber: 5400
+member: uid=Liam,ou=users,dc=example,dc=local
 
 dn: cn=rotterdam,ou=groups,dc=example,dc=local
-objectClass: posixGroup
+objectClass: groupOfNames
 cn: rotterdam
-gidNumber: 5500
-
-dn: cn=alkmar,ou=groups,dc=example,dc=local
-objectClass: posixGroup
-cn: alkmar
-gidNumber: 5600
-
-dn: cn=utrecht,ou=groups,dc=example,dc=local
-objectClass: posixGroup
-cn: utrecht
-gidNumber: 5700
-
-dn: cn=hilversum,ou=groups,dc=example,dc=local
-objectClass: posixGroup
-cn: hilversum
-gidNumber: 5800
-
-dn: cn=haarlem,ou=groups,dc=example,dc=local
-objectClass: posixGroup
-cn: haarlem
-gidNumber: 5900
+member: uid=Olivia,ou=users,dc=example,dc=local
